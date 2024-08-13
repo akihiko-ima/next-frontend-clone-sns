@@ -4,12 +4,14 @@ import React, { useState } from "react";
 
 import { useAuth } from "@/context/auth";
 import apiClient from "@/lib/apiClient";
+import useToast from "@/hooks/useToast";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const router = useRouter();
+  const { toastSucces, toastError } = useToast();
 
   const { login } = useAuth();
 
@@ -26,10 +28,11 @@ const Login = () => {
       const token = response.data.token;
       // set token to local storage
       login(token);
-
+      toastSucces("ログイン成功");
       router.push("/");
     } catch (error) {
       console.error(error);
+      toastError("メールアドレス or パスワード を確認してください。");
     }
   };
 

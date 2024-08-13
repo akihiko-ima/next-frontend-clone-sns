@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import Post from "./Post";
 import apiClient from "@/lib/apiClient";
+import useToast from "@/hooks/useToast";
 import { PostType } from "@/types/types";
 
 const Timeline = () => {
   const [postText, setPostText] = useState<string>("");
   const [latestPosts, setLatestPosts] = useState<PostType[]>([]);
+
+  const { toastSucces, toastError } = useToast();
 
   // post method
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -16,9 +19,11 @@ const Timeline = () => {
         content: postText,
       });
       setLatestPosts((prevPosts) => [newPost.data, ...prevPosts]);
+      // toast message
+      toastSucces("投稿成功");
       setPostText("");
     } catch (error) {
-      alert("ログインしてください");
+      toastError("ログインしてください");
     }
   };
 

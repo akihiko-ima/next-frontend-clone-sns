@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import apiClient from "@/lib/apiClient";
+import useToast from "@/hooks/useToast";
 
 const Signup = () => {
   const [username, setUsername] = useState<string>("");
@@ -11,6 +12,7 @@ const Signup = () => {
   const [password, setPassword] = useState<string>("");
 
   const router = useRouter();
+  const { toastSucces } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,6 +24,7 @@ const Signup = () => {
         email,
         password,
       });
+      toastSucces("アカウントを作成できました。");
       router.push("/login");
     } catch (error) {
       console.error(error);
