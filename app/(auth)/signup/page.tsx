@@ -1,29 +1,51 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Head from "next/head";
+import Link from "next/link";
 
-import apiClient from "@/lib/apiClient";
+import apiFetch from "@/lib/apiClient";
 import useToast from "@/hooks/useToast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { UserPlus } from "lucide-react";
+
+/*
+ * User Registration API Call
+ */
+async function registerUser(username: string, email: string, password: string) {
+  return await apiFetch("/auth/register", {
+    method: "POST",
+    body: JSON.stringify({
+      username,
+      email,
+      password,
+    }),
+  });
+}
 
 export default function Signup() {
+  const router = useRouter();
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const router = useRouter();
   const { toastSucces } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // user register API
+    // user register process
     try {
-      await apiClient.post("/auth/register", {
-        username,
-        email,
-        password,
-      });
+      const result = await registerUser(username, email, password);
+      console.log("register success:", result);
       toastSucces("アカウントを作成できました。");
       router.push("/login");
     } catch (error) {
@@ -32,89 +54,110 @@ export default function Signup() {
   };
 
   return (
-    <div
-      style={{ height: "88vh" }}
-      className="flex flex-col justify-center sm:px-6 lg:px-8"
-    >
-      <Head>
-        <title>Create an account</title>
-      </Head>
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="text-center text-3xl font-extrabold text-gray-900">
-          Create an account
-        </h2>
-      </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-lg border-2 sm:rounded-lg sm:px-10">
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Username
-              </label>
-              <input
-                id="name"
-                name="name"
+    <div className="min-h-screen bg-blue-50 flex items-center justify-center p-2">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="space-y-2 text-center">
+          <div className="flex justify-center">
+            <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+              <UserPlus className="h-7 w-7 text-primary" />
+            </div>
+          </div>
+          <CardTitle className="text-3xl font-bold">新規登録</CardTitle>
+          <CardDescription>アカウントを作成して始めましょう</CardDescription>
+          <div className="mb-4 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 flex items-start gap-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 mt-0.5 text-amber-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"
+              />
+            </svg>
+
+            <p className="text-sm leading-relaxed">
+              このサイトではメール認証を行っていません。
+              <br />
+              <span className="font-semibold">
+                実在しないメールアドレスで登録していただいて大丈夫です。
+              </span>
+            </p>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="space-y-1">
+              <Label htmlFor="username" className="text-sm font-medium">
+                ユーザー名
+              </Label>
+              <Input
+                id="username"
                 type="text"
-                autoComplete="name"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="username"
+                className="h-11"
                 required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-200"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setUsername(e.target.value)
-                }
               />
             </div>
-            <div className="mt-6">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Mailadress
-              </label>
-              <input
+
+            <div className="space-y-1">
+              <Label htmlFor="username" className="text-sm font-medium">
+                メールアドレス
+              </Label>
+              <Input
                 id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="email"
+                className="h-11"
                 required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-200"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setEmail(e.target.value)
-                }
               />
             </div>
-            <div className="mt-6">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <input
+
+            <div className="space-y-1">
+              <Label htmlFor="password" className="text-sm font-medium">
+                パスワード
+              </Label>
+              <Input
                 id="password"
-                name="password"
                 type="password"
-                autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="password"
+                className="h-11"
                 required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-200"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setPassword(e.target.value)
-                }
               />
             </div>
-            <div className="mt-6">
-              <button
-                type="submit"
-                className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Create
-              </button>
-            </div>
+
+            <Button
+              type="submit"
+              className="w-full bg-blue-800 hover:bg-blue-600 h-11 text-base font-medium"
+              size="lg"
+            >
+              登録する
+            </Button>
           </form>
-        </div>
-      </div>
+
+          <div className="mt-6 text-center text-sm">
+            <span className="text-muted-foreground">
+              すでにアカウントをお持ちの方は
+            </span>{" "}
+            <Link
+              href="/login"
+              className="text-primary hover:underline font-semibold"
+            >
+              ログイン
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

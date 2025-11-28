@@ -1,17 +1,41 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Head from "next/head";
+import Link from "next/link";
 
 import { useAuth } from "@/context/auth";
-import apiClient from "@/lib/apiClient";
+import apiFetch from "@/lib/apiClient";
 import useToast from "@/hooks/useToast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { LogIn } from "lucide-react";
+
+/*
+ * User Login API Call
+ */
+async function loginUser(email: string, password: string) {
+  return await apiFetch("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  });
+}
 
 export default function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const router = useRouter();
   const { toastSucces, toastError } = useToast();
 
   const { login } = useAuth();
@@ -21,14 +45,8 @@ export default function Login() {
 
     // user register API
     try {
-      const response = await apiClient.post("/auth/login", {
-        email,
-        password,
-      });
-
-      const token = response.data.token;
-      // set token to local storage
-      login(token);
+      const response = await loginUser(email, password);
+      login(response.token); // set token to local storage
       toastSucces("ログイン成功");
       router.push("/");
     } catch (error) {
@@ -38,70 +56,73 @@ export default function Login() {
   };
 
   return (
-    <div
-      style={{ height: "88vh" }}
-      className="flex flex-col justify-center py-12 sm:px-6 lg:px-8"
-    >
-      <Head>
-        <title>Login</title>
-      </Head>
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Login
-        </h2>
-      </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-lg border-2 sm:rounded-lg sm:px-10">
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Mailadress
-              </label>
-              <input
+    <div className="min-h-screen bg-blue-50 flex items-center justify-center p-2">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="space-y-3 text-center">
+          <div className="flex justify-center">
+            <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+              <LogIn className="h-7 w-7 text-primary" />
+            </div>
+          </div>
+          <CardTitle className="text-3xl font-bold">ログイン</CardTitle>
+          <CardDescription>
+            登録したメールアドレスとパスワードを入力してください
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-1">
+              <Label htmlFor="username" className="text-sm font-medium">
+                メールアドレス
+              </Label>
+              <Input
                 id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="email"
+                className="h-11"
                 required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-200"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setEmail(e.target.value)
-                }
               />
             </div>
-            <div className="mt-6">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <input
+
+            <div className="space-y-1">
+              <Label htmlFor="password" className="text-sm font-medium">
+                パスワード
+              </Label>
+              <Input
                 id="password"
-                name="password"
                 type="password"
-                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="password"
+                className="h-11"
                 required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  bg-gray-200"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setPassword(e.target.value)
-                }
               />
             </div>
-            <div className="mt-6">
-              <button
-                type="submit"
-                className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Login
-              </button>
-            </div>
+
+            <Button
+              type="submit"
+              className="w-full bg-blue-800 hover:bg-blue-600 h-11 text-base font-medium"
+              size="lg"
+            >
+              ログイン
+            </Button>
           </form>
-        </div>
-      </div>
+
+          <div className="mt-6 text-center text-sm">
+            <span className="text-muted-foreground">
+              アカウントをお持ちでない方は
+            </span>{" "}
+            <Link
+              href="/signup"
+              className="text-primary hover:underline font-semibold"
+            >
+              新規登録
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
