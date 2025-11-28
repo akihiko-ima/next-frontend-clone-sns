@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { GetServerSideProps } from "next";
-import React from "react";
 
 import { PostType, Profile } from "@/types/types";
 import apiClient from "@/lib/apiClient";

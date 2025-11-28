@@ -1,10 +1,16 @@
+"use client";
 import Link from "next/link";
-import React from "react";
+import {
+  AiOutlineUser,
+  AiOutlineLogin,
+  AiOutlineUserAdd,
+  AiOutlineLogout,
+} from "react-icons/ai";
 
 import { useAuth } from "@/context/auth";
 import useToast from "@/hooks/useToast";
 
-const NavBar = () => {
+export default function NavBar() {
   const { user, logout } = useAuth();
   const { toastSucces } = useToast();
 
@@ -14,27 +20,29 @@ const NavBar = () => {
   };
 
   return (
-    <header className="bg-teal-700 p-4 text-white">
-      <div className="container mx-auto flex justify-between items-center h-9">
-        <h1 className="font-semibold text-3xl">
+    <header className="bg-gradient-to-r from-teal-600 to-teal-800 p-4 text-white shadow-md">
+      <div className="container mx-auto flex justify-between items-center h-12">
+        <h1 className="font-extrabold text-3xl tracking-tight text-white drop-shadow-lg">
           <Link href="/" className="ml-4">
             Clone-SNS
           </Link>
         </h1>
         <nav>
-          <ul className="flex space-x-4">
+          <ul className="flex space-x-4 md:space-x-6 items-center">
             {user ? (
               <>
                 <Link
                   href={`/profile/${user.id}`}
-                  className="bg-amber-200 text-gray-900 py-2 px-3 rounded-lg font-medium hover:bg-amber-500"
+                  className="flex items-center gap-2 bg-amber-200 text-gray-900 py-2 px-4 rounded-lg font-medium shadow hover:scale-105 hover:bg-amber-400 transition-transform duration-200"
                 >
+                  <AiOutlineUser size={20} />
                   Profile
                 </Link>
                 <button
-                  className="bg-amber-200 text-gray-900 py-2 px-3 rounded-lg font-medium hover:bg-amber-500"
+                  className="flex items-center gap-2 bg-amber-200 text-gray-900 py-2 px-4 rounded-lg font-medium shadow hover:scale-105 hover:bg-amber-400 transition-transform duration-200"
                   onClick={handleLogout}
                 >
+                  <AiOutlineLogout size={20} />
                   Logout
                 </button>
               </>
@@ -42,14 +50,16 @@ const NavBar = () => {
               <>
                 <Link
                   href="/login"
-                  className="bg-amber-200 text-gray-900 py-2 px-3 rounded-lg font-medium hover:bg-amber-500"
+                  className="flex items-center gap-2 bg-amber-200 text-gray-900 py-2 px-4 rounded-lg font-medium shadow hover:scale-105 hover:bg-amber-400 transition-transform duration-200"
                 >
+                  <AiOutlineLogin size={20} />
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="bg-amber-200 text-gray-900 py-2 px-3 rounded-lg font-medium hover:bg-amber-500"
+                  className="flex items-center gap-2 bg-amber-200 text-gray-900 py-2 px-4 rounded-lg font-medium shadow hover:scale-105 hover:bg-amber-400 transition-transform duration-200"
                 >
+                  <AiOutlineUserAdd size={20} />
                   Sign up
                 </Link>
               </>
@@ -59,6 +69,4 @@ const NavBar = () => {
       </div>
     </header>
   );
-};
-
-export default NavBar;
+}

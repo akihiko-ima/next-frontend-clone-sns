@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 
 import Post from "./Post";
@@ -5,7 +6,7 @@ import apiClient from "@/lib/apiClient";
 import useToast from "@/hooks/useToast";
 import { PostType } from "@/types/types";
 
-const Timeline = () => {
+export default function Timeline() {
   const [postText, setPostText] = useState<string>("");
   const [latestPosts, setLatestPosts] = useState<PostType[]>([]);
 
@@ -19,7 +20,6 @@ const Timeline = () => {
         content: postText,
       });
       setLatestPosts((prevPosts) => [newPost.data, ...prevPosts]);
-      // toast message
       toastSucces("投稿成功");
       setPostText("");
     } catch (error) {
@@ -31,7 +31,7 @@ const Timeline = () => {
   useEffect(() => {
     const fetchLatestPosts = async () => {
       try {
-        const response = await apiClient.get("/posts/get_latest_post");
+        const response = await apiClient.get("/posts/get-latest-post");
         setLatestPosts(response.data);
       } catch (error) {
         console.error(error);
@@ -71,6 +71,4 @@ const Timeline = () => {
       </main>
     </div>
   );
-};
-
-export default Timeline;
+}

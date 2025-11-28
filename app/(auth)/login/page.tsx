@@ -1,72 +1,59 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import Head from "next/head";
-import { useRouter } from "next/router";
+"use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import Head from "next/head";
 
+import { useAuth } from "@/context/auth";
 import apiClient from "@/lib/apiClient";
 import useToast from "@/hooks/useToast";
 
-const Signup = () => {
-  const [username, setUsername] = useState<string>("");
+export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const router = useRouter();
-  const { toastSucces } = useToast();
+  const { toastSucces, toastError } = useToast();
+
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // user register API
     try {
-      await apiClient.post("/auth/register", {
-        username,
+      const response = await apiClient.post("/auth/login", {
         email,
         password,
       });
-      toastSucces("アカウントを作成できました。");
-      router.push("/login");
+
+      const token = response.data.token;
+      // set token to local storage
+      login(token);
+      toastSucces("ログイン成功");
+      router.push("/");
     } catch (error) {
       console.error(error);
+      toastError("メールアドレス or パスワード を確認してください。");
     }
   };
 
   return (
     <div
       style={{ height: "88vh" }}
-      className="flex flex-col justify-center sm:px-6 lg:px-8"
+      className="flex flex-col justify-center py-12 sm:px-6 lg:px-8"
     >
       <Head>
-        <title>Create an account</title>
+        <title>Login</title>
       </Head>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="text-center text-3xl font-extrabold text-gray-900">
-          Create an account
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Login
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-lg border-2 sm:rounded-lg sm:px-10">
           <form onSubmit={handleSubmit}>
             <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Username
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                autoComplete="name"
-                required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-200"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setUsername(e.target.value)
-                }
-              />
-            </div>
-            <div className="mt-6">
               <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
@@ -96,9 +83,9 @@ const Signup = () => {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="new-password"
+                autoComplete="current-password"
                 required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-200"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  bg-gray-200"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setPassword(e.target.value)
                 }
@@ -109,7 +96,7 @@ const Signup = () => {
                 type="submit"
                 className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                Create
+                Login
               </button>
             </div>
           </form>
@@ -117,6 +104,4 @@ const Signup = () => {
       </div>
     </div>
   );
-};
-
-export default Signup;
+}
