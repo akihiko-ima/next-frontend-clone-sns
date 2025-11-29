@@ -21,5 +21,11 @@ export interface Profile {
   bio: string;
   profileImageUrl: string;
   userId: number;
-  user: UserType;
+  user?: UserType;
+  username: string;
+  email: string;
+  authorId: number;
+  profileId: number;
+  createdAt: string;
+  updatedAt: string;
 }

@@ -18,9 +18,11 @@ export default function NavBar() {
   return (
     <nav className="bg-white/70 backdrop-blur-sm border-b sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-        <p className="text-xl font-bold text-blue-700 tracking-wide hover:opacity-80 transition">
-          IMA-SNS
-        </p>
+        <Link href="/">
+          <p className="text-xl font-bold text-blue-700 tracking-wide hover:opacity-80 transition">
+            IMA-SNS
+          </p>
+        </Link>
         <div className="flex items-center gap-3">
           {currentUser ? (
             <>
