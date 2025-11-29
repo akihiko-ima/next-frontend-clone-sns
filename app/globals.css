@@ -74,3 +74,25 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Add flying letter animation keyframes */
+@keyframes fly-away {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -150px) rotate(15deg) scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -300px) rotate(25deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@layer utilities {
+  .animate-fly-away {
+    animation: fly-away 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+}

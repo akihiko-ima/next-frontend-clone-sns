@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { PostType } from "@/types/types";
+import { PostType } from "@/types";
 
 interface PostProps {
   post: PostType;

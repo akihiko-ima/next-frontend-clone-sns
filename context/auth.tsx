@@ -9,7 +9,7 @@ interface AuthProviderProps {
 }
 
 interface AuthContextType {
-  user: null | {
+  currentUser: null | {
     id: number;
     email: string;
     username: string;
@@ -19,7 +19,7 @@ interface AuthContextType {
 }
 
 const AuthContext = React.createContext<AuthContextType>({
-  user: null,
+  currentUser: null,
   login: () => {},
   logout: () => {},
 });
@@ -31,7 +31,7 @@ export const useAuth = () => {
 
 // プロバイダーコンポーネント
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<null | {
+  const [currentUser, setCurrentUser] = useState<null | {
     id: number;
     email: string;
     username: string;
@@ -40,13 +40,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // ----------- ユーザー情報取得関数 -----------
   const fetchUserWithToken = async (token: string) => {
     try {
-      const userData = await apiFetch("/users/me", {
+      const currentUserData = await apiFetch("/users/me", {
         method: "GET",
         headers: {
           "X-JWT-Authorization": `Bearer ${token}`,
         },
       });
-      setUser(userData.user);
+      setCurrentUser(currentUserData.user);
     } catch (error) {
       console.error(error);
     }
@@ -68,11 +68,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // ----------- logout：token 削除 -----------
   const logout = () => {
     localStorage.removeItem("auth_token");
-    setUser(null);
+    setCurrentUser(null);
   };
 
   const value = {
-    user,
+    currentUser,
     login,
     logout,
   };

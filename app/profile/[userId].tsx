@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { GetServerSideProps } from "next";
 
-import { PostType, Profile } from "@/types/types";
+import { PostType, Profile } from "@/types";
 import apiClient from "@/lib/apiClient";
 
 type Props = {
