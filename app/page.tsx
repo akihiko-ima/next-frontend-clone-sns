@@ -37,7 +37,6 @@ export default function Home() {
 
         <div className="space-y-6">
           <PostForm />
-
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-muted-foreground">
               最近の投稿

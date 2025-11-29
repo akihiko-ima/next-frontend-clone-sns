@@ -4,6 +4,7 @@ export interface PostType {
   createdAt: string;
   authorId: number;
   author: UserType;
+  profile: Profile;
 }
 
 export interface UserType {

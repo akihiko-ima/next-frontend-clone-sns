@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { MessageCircle, Heart } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PostType } from "@/types";
 
 interface PostCardProps {
@@ -21,9 +21,10 @@ export function PostCard({ post }: PostCardProps) {
   return (
     <Card className="p-6 hover:shadow-md transition-shadow">
       <div className="flex gap-4">
-        <Link href={`/profile/${post.author.username}`}>
+        <Link href={`/profile/${post.authorId}`}>
           <Avatar className="h-12 w-12 ring-2 ring-primary/10 hover:ring-primary/30 transition-all">
-            <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+            <AvatarImage src={post.profile.profileImageUrl} alt="User Icon" />
+            <AvatarFallback>
               {post.author.username[0].toUpperCase()}
             </AvatarFallback>
           </Avatar>
@@ -32,14 +33,11 @@ export function PostCard({ post }: PostCardProps) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
             <Link
-              href={`/profile/${post.author.username}`}
+              href={`/profile/${post.authorId}`}
               className="font-bold hover:underline text-foreground"
             >
-              {post.author.username}
-            </Link>
-            <span className="text-sm text-muted-foreground">
               @{post.author.username}
-            </span>
+            </Link>
             <span className="text-sm text-muted-foreground">·</span>
             <span className="text-sm text-muted-foreground">
               {formattedDate}
