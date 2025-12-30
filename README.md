@@ -1,40 +1,40 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Dummy-SNS （Next.js + TypeScript）
 
-## Getting Started
+このプロジェクトは、Next.js と TypeScript を用いた SNS のダミーアプリケーションです。
 
-First, run the development server:
+- ヒーローページ
+  ![ヒーローページ](docs/clone-sns-hero-page.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 構成・技術スタック
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- **Next.js**: React ベースのフレームワーク。`app/`ディレクトリ構成を採用。
+- **TypeScript**: 型安全な開発を実現。
+- **Tailwind CSS**: ユーティリティファーストな CSS フレームワーク。
+- **コンポーネント設計**: `components/`配下に UI 部品や投稿関連のコンポーネントを配置。
+- **認証機能**: `context/auth.tsx`で認証状態を管理。
+- **API 通信**: `lib/apiClient.ts`で API クライアントを実装。
+- **型定義**: `types/index.ts`で型を一元管理。
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+---
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## 主なディレクトリ・ファイル
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- `app/`: ルーティングとページコンポーネント（例：ログイン、サインアップ、プロフィール、投稿一覧など）
+- `components/`: ナビゲーションバー、投稿カード、投稿フォームなどの再利用可能な UI 部品
+- `context/`: グローバルな状態管理（主に認証）
+- `hooks/`: カスタムフック（例：トースト通知用）
+- `lib/`: API クライアントやユーティリティ関数
+- `public/`: 静的ファイル
+- `types/`: 型定義
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 代表的な機能
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- ユーザー認証（ログイン・サインアップ）
+- 投稿の作成・表示
+- プロフィールページ
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+---
