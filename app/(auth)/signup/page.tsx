@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-import apiFetch from "@/lib/apiClient";
+import { useAuth } from "@/context/auth";
 import useToast from "@/hooks/useToast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,39 +17,30 @@ import {
 } from "@/components/ui/card";
 import { UserPlus } from "lucide-react";
 
-/*
- * User Registration API Call
- */
-async function registerUser(username: string, email: string, password: string) {
-  return await apiFetch("/auth/register", {
-    method: "POST",
-    body: JSON.stringify({
-      username,
-      email,
-      password,
-    }),
-  });
-}
-
 export default function Signup() {
   const router = useRouter();
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const { toastSucces } = useToast();
+  const { setUser } = useAuth();
+  const { toastSucces, toastError } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // user register process
     try {
-      const result = await registerUser(username, email, password);
-      console.log("register success:", result);
-      toastSucces("アカウントを作成できました。");
-      router.push("/login");
-    } catch (error) {
-      console.error(error);
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+      });
+      if (!res.ok) throw new Error();
+      const { user } = await res.json();
+      setUser(user);
+      toastSucces("アカウントを作成しました。");
+      router.push("/");
+    } catch {
+      toastError("登録に失敗しました。");
     }
   };
 
@@ -79,7 +70,6 @@ export default function Signup() {
                 d="M13 16h-1v-4h-1m1-4h.01M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"
               />
             </svg>
-
             <p className="text-sm leading-relaxed">
               このサイトではメール認証を行っていません。
               <br />
@@ -107,7 +97,7 @@ export default function Signup() {
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor="username" className="text-sm font-medium">
+              <Label htmlFor="email" className="text-sm font-medium">
                 メールアドレス
               </Label>
               <Input

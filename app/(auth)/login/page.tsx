@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { useAuth } from "@/context/auth";
-import apiFetch from "@/lib/apiClient";
 import useToast from "@/hooks/useToast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,39 +17,21 @@ import {
 } from "@/components/ui/card";
 import { LogIn } from "lucide-react";
 
-/*
- * User Login API Call
- */
-async function loginUser(email: string, password: string) {
-  return await apiFetch("/auth/login", {
-    method: "POST",
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  });
-}
-
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const { toastSucces, toastError } = useToast();
-
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // user register API
     try {
-      const response = await loginUser(email, password);
-      login(response.token); // set token to local storage
+      await login(email, password);
       toastSucces("ログイン成功");
       router.push("/");
-    } catch (error) {
-      console.error(error);
+    } catch {
       toastError("メールアドレス or パスワード を確認してください。");
     }
   };
@@ -72,7 +53,7 @@ export default function Login() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1">
-              <Label htmlFor="username" className="text-sm font-medium">
+              <Label htmlFor="email" className="text-sm font-medium">
                 メールアドレス
               </Label>
               <Input

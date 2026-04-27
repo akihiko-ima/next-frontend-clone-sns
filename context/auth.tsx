@@ -1,81 +1,59 @@
 "use client";
-import React, { ReactNode, useContext, useEffect, useState } from "react";
+import React, { ReactNode, useContext, useState } from "react";
 
-import apiFetch from "@/lib/apiClient";
-
-// 型定義
-interface AuthProviderProps {
-  children: ReactNode;
+interface User {
+  id: number;
+  email: string;
+  username: string;
 }
 
 interface AuthContextType {
-  currentUser: null | {
-    id: number;
-    email: string;
-    username: string;
-  };
-  login: (token: string) => void;
-  logout: () => void;
+  currentUser: User | null;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  setUser: (user: User) => void;
 }
 
 const AuthContext = React.createContext<AuthContextType>({
   currentUser: null,
-  login: () => {},
-  logout: () => {},
+  login: async () => { },
+  logout: async () => { },
+  setUser: () => { },
 });
 
-// カスタムフック
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
 
-// プロバイダーコンポーネント
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [currentUser, setCurrentUser] = useState<null | {
-    id: number;
-    email: string;
-    username: string;
-  }>(null);
+interface AuthProviderProps {
+  children: ReactNode;
+  initialUser: User | null;
+}
 
-  // ----------- ユーザー情報取得関数 -----------
-  const fetchUserWithToken = async (token: string) => {
-    try {
-      const currentUserData = await apiFetch("/users/me", {
-        method: "GET",
-        headers: {
-          "X-JWT-Authorization": `Bearer ${token}`,
-        },
-      });
-      setCurrentUser(currentUserData.user);
-    } catch (error) {
-      console.error(error);
-    }
+export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
+  const [currentUser, setCurrentUser] = useState<User | null>(initialUser);
+
+  const login = async (email: string, password: string) => {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!res.ok) throw new Error("ログインに失敗しました");
+    const { user } = await res.json();
+    setCurrentUser(user);
   };
 
-  // ----------- 初回読み込み時：token があればユーザー取得 -----------
-  useEffect(() => {
-    const token = localStorage.getItem("auth_token");
-    if (!token) return;
-    fetchUserWithToken(token);
-  }, []);
-
-  // ----------- login：token を保存してユーザー情報を取得 -----------
-  const login = async (token: string) => {
-    localStorage.setItem("auth_token", token);
-    await fetchUserWithToken(token);
-  };
-
-  // ----------- logout：token 削除 -----------
-  const logout = () => {
-    localStorage.removeItem("auth_token");
+  const logout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
     setCurrentUser(null);
   };
 
-  const value = {
-    currentUser,
-    login,
-    logout,
+  const setUser = (user: User) => {
+    setCurrentUser(user);
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ currentUser, login, logout, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

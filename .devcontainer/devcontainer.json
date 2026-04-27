@@ -1,7 +1,7 @@
 {
-  "name": "fe-favorite-stock-news",
+  "name": "next-frontend-clone-sns",
   "image": "mcr.microsoft.com/devcontainers/base:bookworm",
-  "workspaceFolder": "/workspaces/fe-favorite-stock-news",
+  "workspaceFolder": "/workspaces/next-frontend-clone-sns",
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "lts"

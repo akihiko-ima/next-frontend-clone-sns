@@ -1,30 +1,17 @@
-"use client";
-import { useEffect, useState } from "react";
-
 import { PostType } from "@/types";
-import apiFetch from "@/lib/apiClient";
+import { serverFetch } from "@/lib/serverApiClient";
+import { Sparkles } from "lucide-react";
 import NavBar from "@/components/nav-bar";
 import { PostForm } from "@/components/post-form";
 import { PostCard } from "@/components/post-card";
-import { Sparkles } from "lucide-react";
 
-export default function Home() {
-  const [posts, setPosts] = useState<PostType[]>([]);
-
-  // 投稿データ取得
-  useEffect(() => {
-    const fetchLatestPosts = async () => {
-      try {
-        const response = await apiFetch("/posts/get-latest-post", {
-          method: "GET",
-        });
-        setPosts(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchLatestPosts();
-  }, []);
+export default async function Home() {
+  let posts: PostType[] = [];
+  try {
+    posts = await serverFetch("/posts/get-latest-post");
+  } catch (err) {
+    console.error(err);
+  }
 
   return (
     <div className="min-h-screen container max-w-4xl mx-auto">

@@ -1,50 +1,35 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 import { Profile } from "@/types";
-import apiFetch from "@/lib/apiClient";
+import { serverFetch } from "@/lib/serverApiClient";
 import { PersonalPostType, PostList } from "@/components/post-list";
 import NavBar from "@/components/nav-bar";
 
-export default function UserProfilePage() {
-  const params = useParams();
-  const userId = params.userId as string;
 
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [posts, setPosts] = useState<PersonalPostType[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default async function UserProfilePage({
+  params,
+}: {
+  params: Promise<{ userId: string }>;
+}) {
+  const { userId } = await params;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // プロフィール取得
-        const profileRes = await apiFetch(`/users/profile/${userId}`, {
-          method: "GET",
-        });
-        // 投稿一覧取得
-        const postsRes = await apiFetch(`/posts/${userId}`, {
-          method: "GET",
-        });
-        setProfile(profileRes.profile);
-        setPosts(postsRes);
-      } catch (err: any) {
-        console.error(err);
-        setError(err.message || "データ取得に失敗しました");
-      } finally {
-        setLoading(false);
-      }
-    };
+  let profile: Profile | null = null;
+  let posts: PersonalPostType[] = [];
 
-    fetchData();
-  }, [userId]);
+  try {
+    const [profileRes, postsRes] = await Promise.all([
+      serverFetch(`/users/profile/${userId}`),
+      serverFetch(`/posts/${userId}`),
+    ]);
+    profile = profileRes.profile;
+    posts = postsRes;
+  } catch (err) {
+    console.error(err);
+    notFound();
+  }
 
-  if (loading) return <p>読み込み中…</p>;
-  if (error) return <p>エラー: {error}</p>;
-  if (!profile) return <p>プロフィールが見つかりません</p>;
+  if (!profile) notFound();
 
   return (
     <div className="min-h-screen container max-w-4xl mx-auto">
@@ -84,7 +69,7 @@ export default function UserProfilePage() {
                 </p>
               </div>
             ) : (
-              posts.map((post) => <PostList key={post.id} posts={posts} />)
+              <PostList posts={posts} />
             )}
           </div>
         </div>
