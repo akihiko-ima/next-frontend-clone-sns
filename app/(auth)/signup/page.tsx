@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { UserPlus } from "lucide-react";
+import { UserPlus, Info } from "lucide-react";
 
 export default function Signup() {
   const router = useRouter();
@@ -45,43 +45,28 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 flex items-center justify-center p-2">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="space-y-2 text-center">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-lg border-t-4 border-t-primary">
+        <CardHeader className="space-y-2 text-center pb-2">
           <div className="flex justify-center">
-            <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
               <UserPlus className="h-7 w-7 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-3xl font-bold">新規登録</CardTitle>
+          <CardTitle className="text-2xl font-bold">新規登録</CardTitle>
           <CardDescription>アカウントを作成して始めましょう</CardDescription>
-          <div className="mb-4 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 flex items-start gap-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 mt-0.5 text-amber-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 16h-1v-4h-1m1-4h.01M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"
-              />
-            </svg>
-            <p className="text-sm leading-relaxed">
-              このサイトではメール認証を行っていません。
-              <br />
-              <span className="font-semibold">
-                実在しないメールアドレスで登録していただいて大丈夫です。
-              </span>
+
+          <div className="flex items-start gap-2.5 p-3 rounded-lg bg-amber-50 border border-amber-200 text-left mt-2">
+            <Info className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+            <p className="text-xs text-amber-800 leading-relaxed">
+              メール認証は行っていません。
+              <span className="font-semibold">実在しないアドレスで登録可能です。</span>
             </p>
           </div>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <div className="space-y-1">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
               <Label htmlFor="username" className="text-sm font-medium">
                 ユーザー名
               </Label>
@@ -91,12 +76,12 @@ export default function Signup() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="username"
-                className="h-11"
+                className="h-11 focus-visible:ring-primary/50"
                 required
               />
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="email" className="text-sm font-medium">
                 メールアドレス
               </Label>
@@ -105,13 +90,13 @@ export default function Signup() {
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="email"
-                className="h-11"
+                placeholder="email@example.com"
+                className="h-11 focus-visible:ring-primary/50"
                 required
               />
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="password" className="text-sm font-medium">
                 パスワード
               </Label>
@@ -120,15 +105,15 @@ export default function Signup() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="password"
-                className="h-11"
+                placeholder="••••••••"
+                className="h-11 focus-visible:ring-primary/50"
                 required
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-blue-800 hover:bg-blue-600 h-11 text-base font-medium"
+              className="w-full bg-primary hover:bg-primary/90 h-11 text-base font-medium"
               size="lg"
             >
               登録する

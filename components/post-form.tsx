@@ -65,30 +65,32 @@ export function PostForm() {
 
   return (
     <>
-      <Card className="p-6 shadow-sm">
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <Card className="p-5 shadow-sm border-t-2 border-t-primary/40 bg-card">
+        <form onSubmit={handleSubmit} className="space-y-3">
           <Textarea
             value={postText}
             onChange={(e) => setPostText(e.target.value)}
             placeholder="今何してる？"
-            className="min-h-[80px] resize-none text-base"
+            className="min-h-[90px] resize-none text-sm focus-visible:ring-primary/50"
             maxLength={140}
           />
           <div className="flex items-center justify-between">
             <span
-              className={`text-sm font-medium ${postText.length > 120
-                ? "text-destructive"
-                : "text-muted-foreground"
-                }`}
+              className={`text-xs font-medium tabular-nums ${
+                postText.length > 120
+                  ? "text-destructive"
+                  : "text-muted-foreground"
+              }`}
             >
-              文字数制限 : {postText.length}/140
+              {postText.length} / 140
             </span>
             <Button
               type="submit"
               disabled={!postText.trim()}
-              className="gap-2 bg-blue-600 hover:bg-blue-700"
+              size="sm"
+              className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-5"
             >
-              <Send className="h-4 w-4" />
+              <Send className="h-3.5 w-3.5" />
               投稿する
             </Button>
           </div>
@@ -104,7 +106,7 @@ export function PostForm() {
             top: `${letter.y}px`,
           }}
         >
-          <Mail className="h-8 w-8 text-blue-600" />
+          <Mail className="h-8 w-8 text-primary" />
         </div>
       ))}
     </>

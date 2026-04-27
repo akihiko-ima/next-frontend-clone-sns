@@ -37,22 +37,22 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 flex items-center justify-center p-2">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="space-y-3 text-center">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-lg border-t-4 border-t-primary">
+        <CardHeader className="space-y-3 text-center pb-4">
           <div className="flex justify-center">
-            <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
               <LogIn className="h-7 w-7 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-3xl font-bold">ログイン</CardTitle>
+          <CardTitle className="text-2xl font-bold">ログイン</CardTitle>
           <CardDescription>
             登録したメールアドレスとパスワードを入力してください
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-1">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
               <Label htmlFor="email" className="text-sm font-medium">
                 メールアドレス
               </Label>
@@ -61,13 +61,13 @@ export default function Login() {
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="email"
-                className="h-11"
+                placeholder="email@example.com"
+                className="h-11 focus-visible:ring-primary/50"
                 required
               />
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="password" className="text-sm font-medium">
                 パスワード
               </Label>
@@ -76,15 +76,15 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="password"
-                className="h-11"
+                placeholder="••••••••"
+                className="h-11 focus-visible:ring-primary/50"
                 required
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-blue-800 hover:bg-blue-600 h-11 text-base font-medium"
+              className="w-full bg-primary hover:bg-primary/90 h-11 text-base font-medium"
               size="lg"
             >
               ログイン

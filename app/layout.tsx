@@ -28,7 +28,7 @@ export default async function RootLayout({
 
   return (
     <html lang="ja">
-      <body className="bg-gray-100">
+      <body className="bg-background antialiased">
         <AuthProvider initialUser={initialUser}>
           {children}
           <Toaster position="bottom-right" />
