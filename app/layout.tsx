@@ -7,8 +7,8 @@ import { AuthProvider } from "@/context/auth";
 import { serverFetch } from "@/lib/serverApiClient";
 
 export const metadata: Metadata = {
-  title: "Clone-SNS | Next15",
-  description: "Clone-SNS | Next15",
+  title: "Clone-SNS | Next16",
+  description: "Clone-SNS | Next16",
 };
 
 export default async function RootLayout({
@@ -24,7 +24,7 @@ export default async function RootLayout({
       const data = await serverFetch("/users/me");
       initialUser = data.user;
     }
-  } catch {}
+  } catch { }
 
   return (
     <html lang="ja">
